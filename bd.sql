@@ -1,0 +1,54 @@
+CREATE TABLE Livrarias (
+	IDLivraria INT NOT NULL,
+	NomeLivraria VARCHAR(30) NOT NULL,
+	Endereco VARCHAR(50) NOT NULL,
+	CNPJ VARCHAR(18) NOT NULL,
+
+
+	CONSTRAINT UN_CNPJ UNIQUE(CNPJ),
+	CONSTRAINT PK_Livrarias PRIMARY KEY (IDLivraria)
+);
+
+CREATE TABLE Endereco (
+	IDLivraria INT NOT NULL,
+	RUA VARCHAR(40) NOT NULL,
+	Numero VARCHAR(4) NOT NULL,
+	CEP VARCHAR(9) NOT NULL,
+	BAIRRO VARCHAR(30) NOT NULL,
+	CIDADE VARCHAR(20) NOT NULL,
+	UF VARCHAR(2) NOT NULL,
+
+	CONSTRAINT FK_Endereco_Livrarias FOREIGN KEY(IDLivraria)
+	REFERENCES Livrarias(IDLivraria),
+	CONSTRAINT PK_Endereco PRIMARY KEY(IDLivraria)
+);
+
+CREATE TABLE NotasFiscais (
+	CodigoVenda INT NOT NULL,
+	DataVenda DATETIME NOT NULL,
+	IDLivraria INT NOT NULL,
+
+	CONSTRAINT FK_NotasFiscais_Livrarias FOREIGN KEY (IDLivraria)
+	REFERENCES Livrarias(IDLivraria),
+	CONSTRAINT PK_NotasFiscais PRIMARY KEY (CodigoVenda)
+);
+
+CREATE TABLE ItensNF (
+	CodigoVenda INT NOT NULL,
+	IDLivro INT NOT NULL,
+	QtdeVendida INT NOT NULL,
+
+	CONSTRAINT PK_ItensNF PRIMARY KEY (CodigoVenda),
+	CONSTRAINT FK_ItensNF_NotasFiscais FOREIGN KEY (CodigoVenda) REFERENCES NotasFiscais(CodigoVenda),
+
+	CONSTRAINT FK_ItensNF_Livros FOREIGN KEY (IDLivro) REFERENCES Livros(IDLivro)
+);
+
+CREATE TABLE Livros (
+	IDLivro INT NOT NULL,
+	TituloLivro VARCHAR(30) NOT NULL,
+	Autor VARCHAR(30) NOT NULL,
+	PrecoUnitario DECIMAL(5,2) NOT NULL,
+
+	CONSTRAINT PK_Livros PRIMARY KEY(IDLivro)
+);
